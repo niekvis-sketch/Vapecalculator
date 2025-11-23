@@ -549,4 +549,28 @@ function share() {
   opacity: 0;
   transform: translateX(-50px) scale(0.95);
 }
+
+@media (max-width: 600px) {
+  .big-stat { font-size: 3.5rem; }
+  .slide-title { font-size: 1.5rem; }
+  .subtitle { font-size: 1.1rem; }
+  .lung-icon { font-size: 4rem; }
+  
+  .comparison-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .sub-stats {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .stat-item {
+    padding: 16px;
+  }
+  
+  .comp-item {
+    padding: 12px;
+  }
+}
 </style>

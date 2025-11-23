@@ -225,5 +225,20 @@ function setYears(v) { emit('update:yearsVaping', v) }
 .pulse-hover:hover {
   animation: pulse-glow 1.5s infinite;
 }
+
+@media (max-width: 600px) {
+  .row {
+    flex-direction: column;
+    gap: 24px;
+  }
+  
+  .welcome-text h2 {
+    font-size: 1.5rem;
+  }
+  
+  .input-panel {
+    gap: 24px;
+  }
+}
 </style>
 
