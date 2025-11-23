@@ -8,10 +8,80 @@ const props = defineProps({
 })
 const emit = defineEmits(['update:weeklyVapes', 'update:costPerVape', 'update:age', 'update:yearsVaping', 'start'])
 
-function setWeekly(v) { emit('update:weeklyVapes', Number(v)) }
-function setCost(v) { emit('update:costPerVape', Number(v)) }
-function setAge(v) { emit('update:age', v) }
-function setYears(v) { emit('update:yearsVaping', v) }
+function preventInvalid(e) {
+  if (['-', '+', 'e', 'E'].includes(e.key)) e.preventDefault()
+}
+
+function clamp(val, isFloat = false) {
+  if (val === '') return ''
+  let n = isFloat ? parseFloat(val) : parseInt(val)
+  if (isNaN(n)) return ''
+  if (n < 0) n = 0
+  if (n > 999) n = 999
+  return n
+}
+
+function setWeekly(e) { 
+  let v = e.target.value
+  if (v.length > 3) {
+    v = v.slice(0, 3)
+    e.target.value = v
+  }
+  let n = clamp(v)
+  if (n !== '') emit('update:weeklyVapes', n)
+}
+
+function setCost(e) {
+  let v = e.target.value
+  if (v === '') return emit('update:costPerVape', 0)
+  
+  // Check integer part length
+  let parts = v.split('.')
+  if (parts[0].length > 3) {
+    parts[0] = parts[0].slice(0, 3)
+    v = parts.join('.')
+    e.target.value = v
+  }
+
+  let n = parseFloat(v)
+  if (isNaN(n)) return
+  
+  if (n < 0) { n = 0; e.target.value = n; }
+  if (n > 999) { n = 999; e.target.value = n; }
+  
+  if (n === props.costPerVape && String(v).includes('.')) return
+  
+  emit('update:costPerVape', n)
+}
+
+function setAge(e) { 
+  let v = e.target.value
+  if (v.length > 3) {
+    v = v.slice(0, 3)
+    e.target.value = v
+  }
+  emit('update:age', clamp(v)) 
+}
+
+function setYears(e) {
+  let v = e.target.value
+  if (v === '') return emit('update:yearsVaping', '')
+  
+  let parts = v.split('.')
+  if (parts[0].length > 3) {
+    parts[0] = parts[0].slice(0, 3)
+    v = parts.join('.')
+    e.target.value = v
+  }
+
+  let n = parseFloat(v)
+  if (isNaN(n)) return
+  if (n < 0) { n = 0; e.target.value = n; }
+  if (n > 999) { n = 999; e.target.value = n; }
+  
+  if (n === props.yearsVaping && String(v).includes('.')) return
+  emit('update:yearsVaping', n)
+}
 </script>
 
 <template>
@@ -30,17 +100,19 @@ function setYears(v) { emit('update:yearsVaping', v) }
               placeholder="Bijv. 2" 
               type="number" 
               min="0" 
+              max="999"
+              @keydown="preventInvalid"
               :value="weeklyVapes" 
-              @input="setWeekly($event.target.value)" 
+              @input="setWeekly($event)" 
             />
             <div class="input-highlight"></div>
           </div>
         </div>
 
         <div class="presets">
-          <button class="chip" :class="{ active: weeklyVapes === 1 }" @click.prevent="setWeekly(1)">1/wk</button>
-          <button class="chip" :class="{ active: weeklyVapes === 2 }" @click.prevent="setWeekly(2)">2/wk</button>
-          <button class="chip" :class="{ active: weeklyVapes === 3 }" @click.prevent="setWeekly(3)">3/wk</button>
+          <button class="chip" :class="{ active: weeklyVapes === 1 }" @click.prevent="setWeekly({ target: { value: 1 } })">1/wk</button>
+          <button class="chip" :class="{ active: weeklyVapes === 2 }" @click.prevent="setWeekly({ target: { value: 2 } })">2/wk</button>
+          <button class="chip" :class="{ active: weeklyVapes === 3 }" @click.prevent="setWeekly({ target: { value: 3 } })">3/wk</button>
         </div>
       </div>
 
@@ -52,9 +124,11 @@ function setYears(v) { emit('update:yearsVaping', v) }
             placeholder="Bijv. 6.00" 
             type="number" 
             min="0" 
+            max="999"
             step="0.01" 
+            @keydown="preventInvalid"
             :value="costPerVape" 
-            @input="setCost($event.target.value)" 
+            @input="setCost($event)" 
           />
           <div class="input-highlight"></div>
         </div>
@@ -69,8 +143,10 @@ function setYears(v) { emit('update:yearsVaping', v) }
               placeholder="18" 
               type="number" 
               min="0" 
+              max="999"
+              @keydown="preventInvalid"
               :value="age" 
-              @input="setAge($event.target.value)" 
+              @input="setAge($event)" 
             />
             <div class="input-highlight"></div>
           </div>
@@ -83,9 +159,11 @@ function setYears(v) { emit('update:yearsVaping', v) }
               placeholder="1" 
               type="number" 
               min="0" 
+              max="999"
               step="0.5" 
+              @keydown="preventInvalid"
               :value="yearsVaping" 
-              @input="setYears($event.target.value)" 
+              @input="setYears($event)" 
             />
             <div class="input-highlight"></div>
           </div>

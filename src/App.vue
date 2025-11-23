@@ -25,7 +25,7 @@ const comparisons = [
 const view = ref('ask') // 'ask' | 'loading' | 'wrapped' | 'bart'
 
 function startWrapped(){
-  if (weeklyVapes.value === 0 && costPerVape.value === 0) {
+  if (costPerVape.value === 0) {
     view.value = 'bart'
     return
   }
