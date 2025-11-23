@@ -22,15 +22,24 @@ const comparisons = [
   { id: 'game', name: 'Nieuwe Games', cost: 60, icon: '🎮' }
 ]
 
-const view = ref('ask') // 'ask' | 'loading' | 'wrapped'
+const view = ref('ask') // 'ask' | 'loading' | 'wrapped' | 'bart'
 
 function startWrapped(){
+  if (weeklyVapes.value === 0 && costPerVape.value === 0) {
+    view.value = 'bart'
+    return
+  }
   view.value = 'loading'
   // simulate computation/loading then show wrapped test voor mac 
   setTimeout(()=>{ view.value = 'wrapped' }, 1500)
 }
 
 function closeWrapped(){ view.value = 'ask' }
+function resetBart(){ 
+  weeklyVapes.value = 2
+  costPerVape.value = 6
+  view.value = 'ask' 
+}
 
 function handleWeeklyUpdate(val){ weeklyVapes.value = Number(val) }
 function handleCostUpdate(val){ costPerVape.value = Number(val) }
@@ -83,6 +92,12 @@ function handleYearsUpdate(val){ yearsVaping.value = val }
         </section>
 
         <LoadingOverlay v-else-if="view === 'loading'" key="loading" />
+
+        <div v-else-if="view === 'bart'" class="bart-message glass" key="bart">
+          <h2>Bart, doe even normaal man! 🤨</h2>
+          <p>Je kunt niet alles gratis krijgen in het leven.</p>
+          <button class="btn primary" @click="resetBart">Opnieuw proberen</button>
+        </div>
       </transition>
     </main>
   </div>
@@ -97,6 +112,26 @@ function handleYearsUpdate(val){ yearsVaping.value = val }
   margin: 0 auto; 
   padding: 40px;
   border-radius: var(--radius);
+}
+
+.bart-message {
+  text-align: center;
+  padding: 40px;
+  border-radius: var(--radius);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.bart-message h2 {
+  font-size: 2rem;
+  margin-bottom: 16px;
+  color: #f87171;
+}
+
+.bart-message p {
+  font-size: 1.2rem;
+  margin-bottom: 32px;
+  color: var(--text-muted);
 }
 
 .header-animate {
