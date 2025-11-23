@@ -26,7 +26,7 @@ const view = ref('ask') // 'ask' | 'loading' | 'wrapped'
 
 function startWrapped(){
   view.value = 'loading'
-  // simulate computation/loading then show wrapped afewvwewvwevwe
+  // simulate computation/loading then show wrapped test voor mac 
   setTimeout(()=>{ view.value = 'wrapped' }, 1500)
 }
 
