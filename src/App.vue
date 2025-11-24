@@ -52,6 +52,11 @@ function handleYearsUpdate(val){ yearsVaping.value = val }
     <div class="bg-blobs">
       <div class="blob blob-1"></div>
       <div class="blob blob-2"></div>
+      <div class="floating-euro">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M15 18.5c-2.5 0-4.5-1.5-5.5-4h5.5v-2h-6c0-0.5 0-1 0-1.5s0-1 0-1.5h6v-2h-5.5c1-2.5 3-4 5.5-4 1.5 0 3 0.5 4 1.5l1.5-1.5c-1.5-1.5-3.5-2-5.5-2-4 0-7 3-7.5 7h-2.5v2h2c0 0.5 0 1 0 1.5s0 1 0 1.5h-2v2h2.5c0.5 4 3.5 7 7.5 7 2 0 4-0.5 5.5-2l-1.5-1.5c-1-1-2.5-1.5-4-1.5z"/>
+        </svg>
+      </div>
     </div>
 
     <transition name="fade-slide" mode="out-in">
@@ -94,7 +99,7 @@ function handleYearsUpdate(val){ yearsVaping.value = val }
         <LoadingOverlay v-else-if="view === 'loading'" key="loading" />
 
         <div v-else-if="view === 'bart'" class="bart-message glass" key="bart">
-          <h2>Bart, doe even normaal man! 🤨</h2>
+          <h2>Nathan, doe even normaal man! 🤨</h2>
           <p>Je kunt niet alles gratis krijgen in het leven.</p>
           <button class="btn primary" @click="resetBart">Opnieuw proberen</button>
         </div>
@@ -174,6 +179,34 @@ function handleYearsUpdate(val){ yearsVaping.value = val }
   height: 60vw;
   background: var(--secondary);
   animation-delay: -5s;
+}
+
+.floating-euro {
+  position: absolute;
+  top: 50%;
+  left: 75%;
+  transform: translate(-50%, -50%);
+  width: 80vh;
+  height: 80vh;
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: 0;
+  color: var(--text);
+  animation: floatEuro 6s ease-in-out infinite;
+}
+
+.floating-euro svg {
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes floatEuro {
+  0%, 100% {
+    transform: translate(-50%, -50%) translateY(0);
+  }
+  50% {
+    transform: translate(-50%, -50%) translateY(-20px);
+  }
 }
 
 /* Transitions */

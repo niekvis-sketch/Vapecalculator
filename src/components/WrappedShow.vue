@@ -157,8 +157,36 @@
           </div>
         </div>
 
-        <!-- Slide 8: Action -->
-        <div v-else-if="currentSlide === 7" class="slide slide-action" key="7">
+        <!-- Slide 8: Positive Spin -->
+        <div v-else-if="currentSlide === 7" class="slide slide-positive" key="7">
+          <div class="content-wrapper">
+            <h2 class="slide-title animate-in delay-1">Het Goede Nieuws 🌟</h2>
+            <p class="subtitle animate-in delay-2">Je lichaam herstelt razendsnel!</p>
+            
+            <div class="recovery-timeline animate-in delay-3">
+              <div class="recovery-item glass">
+                <div class="time">20 min</div>
+                <div class="benefit">Hartslag wordt weer normaal ❤️</div>
+              </div>
+              <div class="recovery-item glass">
+                <div class="time">48 uur</div>
+                <div class="benefit">Je proeft en ruikt weer beter 🍕</div>
+              </div>
+              <div class="recovery-item glass">
+                <div class="time">2 weken</div>
+                <div class="benefit">Conditie en longfunctie verbeteren 🏃‍♂️</div>
+              </div>
+              <div class="recovery-item glass">
+                <div class="time">1 jaar</div>
+                <div class="benefit">Risico op hartziekten gehalveerd 📉</div>
+              </div>
+            </div>
+            <button class="btn primary animate-in delay-4" @click="nextSlide">Volgende</button>
+          </div>
+        </div>
+
+        <!-- Slide 9: Action -->
+        <div v-else-if="currentSlide === 8" class="slide slide-action" key="8">
           <div class="content-wrapper">
             <h2 class="slide-title animate-in delay-1">Jouw Actieplan</h2>
             <div class="action-buttons animate-in delay-2">
@@ -200,7 +228,7 @@ const props = defineProps({
 const emit = defineEmits(['close'])
 
 const currentSlide = ref(0)
-const totalSlides = 8
+const totalSlides = 9
 const reduction = ref(50)
 
 // Calculations
@@ -532,6 +560,36 @@ function share() {
 
 .pulse-hover:hover {
   animation: pulse-glow 1.5s infinite;
+}
+
+/* Recovery Slide */
+.recovery-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  margin-top: 24px;
+}
+
+.recovery-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 16px;
+  text-align: left;
+}
+
+.recovery-item .time {
+  font-weight: 800;
+  color: var(--accent);
+  min-width: 70px;
+  font-size: 1.1rem;
+}
+
+.recovery-item .benefit {
+  color: var(--text);
+  font-size: 0.95rem;
 }
 
 /* Slide Transitions */
