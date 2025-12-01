@@ -4,6 +4,8 @@ import InputPanel from './components/InputPanel.vue'
 import LoadingOverlay from './components/LoadingOverlay.vue'
 import WrappedShow from './components/WrappedShow.vue'
 import SettingsPanel from './components/SettingsPanel.vue'
+import WelcomeScreen from './components/WelcomeScreen.vue'
+import PreferenceScreen from './components/PreferenceScreen.vue'
 
 const weeklyVapes = ref(2)
 const costPerVape = ref(6.00)
@@ -89,32 +91,60 @@ const weeklyCost = computed(() => weeklyVapes.value * costPerVape.value)
 const yearlyCost = computed(() => weeklyCost.value * 52)
 const monthlyCost = computed(() => yearlyCost.value / 12)
 
-const comparisons = [
-  { id: 'bioscoop', name: 'Bioscoopkaartjes', cost: 12, icon: '🎬' },
-  { id: 'mcd', name: "McDonald's menu's", cost: 9, icon: '🍔' },
-  { id: 'spotify', name: 'Maanden Spotify Premium', cost: 11, icon: '🎵' },
-  { id: 'netflix', name: 'Maanden Netflix', cost: 11, icon: '📺' },
-  { id: 'sneakers', name: 'Paar Sneakers', cost: 100, icon: '👟' },
-  { id: 'game', name: 'Nieuwe Games', cost: 60, icon: '🎮' }
+// Wizard State
+const wizardStep = ref(0) // 0=Welcome, 1-3=Prefs, 4=Input, 5=Loading, 6=Wrapped
+const userPreferences = ref([])
+
+const preferenceQuestions = [
+  {
+    title: "Wat doe je liever?",
+    options: [
+      { id: 'cinema', name: 'Bioscoop', cost: 12, icon: '🎬' },
+      { id: 'concert', name: 'Concert/Festival', cost: 60, icon: '🎵' }
+    ]
+  },
+  {
+    title: "Waar word je blijer van?",
+    options: [
+      { id: 'sneakers', name: 'Nieuwe Sneakers', cost: 120, icon: '👟' },
+      { id: 'gaming', name: 'Gaming Gear', cost: 80, icon: '🎮' }
+    ]
+  },
+  {
+    title: "Ideaal weekend?",
+    options: [
+      { id: 'weekend', name: 'Weekendje Weg', cost: 200, icon: '✈️' },
+      { id: 'dinner', name: 'Uit Eten', cost: 25, icon: '🍕' }
+    ]
+  }
 ]
 
-const view = ref('ask') // 'ask' | 'loading' | 'wrapped' | 'bart'
+function startWizard() {
+  wizardStep.value = 1
+}
+
+function handlePreferenceSelect(option) {
+  userPreferences.value.push(option)
+  if (wizardStep.value < 3) {
+    wizardStep.value++
+  } else {
+    wizardStep.value = 4 // Go to Input
+  }
+}
 
 function startWrapped(){
   if (costPerVape.value === 0) {
-    view.value = 'bart'
+    // view.value = 'bart' // Removed Bart for now or handle differently
     return
   }
-  view.value = 'loading'
+  wizardStep.value = 5 // Loading
   // simulate computation/loading then show wrapped test voor mac 
-  setTimeout(()=>{ view.value = 'wrapped' }, 1500)
+  setTimeout(()=>{ wizardStep.value = 6 }, 1500)
 }
 
-function closeWrapped(){ view.value = 'ask' }
-function resetBart(){ 
-  weeklyVapes.value = 2
-  costPerVape.value = 6
-  view.value = 'ask' 
+function closeWrapped(){ 
+  wizardStep.value = 0 
+  userPreferences.value = []
 }
 
 function handleWeeklyUpdate(val){ weeklyVapes.value = Number(val) }
@@ -136,7 +166,7 @@ function handleYearsUpdate(val){ yearsVaping.value = val }
     </div>
 
     <transition name="fade-slide" mode="out-in">
-      <header v-if="view === 'ask'" class="header-animate">
+      <header v-if="wizardStep === 4" class="header-animate">
         <h1>Vape Calculator</h1>
         <p>Ontdek wat jouw vape-gewoonte écht kost in geld, tijd en gezondheid.</p>
       </header>
@@ -150,9 +180,28 @@ function handleYearsUpdate(val){ yearsVaping.value = val }
       @close="showSettings = false" 
     />
 
-    <main class="app-grid" :class="{ 'full-width': view === 'wrapped' }">
+    <main class="app-grid" :class="{ 'full-width': wizardStep === 6 }">
       <transition name="zoom-fade" mode="out-in">
-        <aside v-if="view === 'ask'" class="input-container glass" key="ask">
+        
+        <!-- Step 0: Welcome -->
+        <WelcomeScreen 
+          v-if="wizardStep === 0" 
+          key="welcome"
+          @start="startWizard"
+        />
+
+        <!-- Step 1-3: Preferences -->
+        <PreferenceScreen
+          v-else-if="wizardStep >= 1 && wizardStep <= 3"
+          :key="`pref-${wizardStep}`"
+          :question="preferenceQuestions[wizardStep - 1]"
+          :step="wizardStep"
+          :totalSteps="3"
+          @select="handlePreferenceSelect"
+        />
+
+        <!-- Step 4: Input -->
+        <aside v-else-if="wizardStep === 4" class="input-container glass" key="input">
           <InputPanel
             :weeklyVapes="weeklyVapes"
             :costPerVape="costPerVape"
@@ -167,14 +216,15 @@ function handleYearsUpdate(val){ yearsVaping.value = val }
           />
         </aside>
 
-        <section v-else-if="view === 'wrapped'" class="wrapped-container" key="wrapped">
+        <!-- Step 6: Wrapped -->
+        <section v-else-if="wizardStep === 6" class="wrapped-container" key="wrapped">
           <WrappedShow 
             :weeklyVapes="weeklyVapes"
             :costPerVape="costPerVape"
             :weeklyCost="weeklyCost" 
             :monthlyCost="monthlyCost" 
             :yearlyCost="yearlyCost" 
-            :comparisons="comparisons"
+            :comparisons="userPreferences"
             :age="age"
             :yearsVaping="yearsVaping"
             :slideSettings="slideSettings"
@@ -182,13 +232,8 @@ function handleYearsUpdate(val){ yearsVaping.value = val }
           />
         </section>
 
-        <LoadingOverlay v-else-if="view === 'loading'" key="loading" />
+        <LoadingOverlay v-else-if="wizardStep === 5" key="loading" />
 
-        <div v-else-if="view === 'bart'" class="bart-message glass" key="bart">
-          <h2>Nathan, doe even normaal man! 🤨</h2>
-          <p>Je kunt niet alles gratis krijgen in het leven.</p>
-          <button class="btn primary" @click="resetBart">Opnieuw proberen</button>
-        </div>
       </transition>
     </main>
   </div>

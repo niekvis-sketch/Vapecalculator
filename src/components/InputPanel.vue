@@ -88,8 +88,8 @@ function setYears(e) {
   <section class="input-panel">
     <button class="settings-btn" @click="$emit('open-settings')" title="Instellingen">⚙️</button>
     <div class="welcome-text">
-      <h2>Ontdek jouw Vape-profiel</h2>
-      <p>Vul je gegevens in en zie wat je écht uitgeeft (en wat je mist).</p>
+      <h2>Wat kost jouw vape?</h2>
+      <p>Vul je gegevens in om de berekening te maken.</p>
     </div>
     <form class="fields" @submit.prevent>
       <div class="field-group">
@@ -174,7 +174,7 @@ function setYears(e) {
 
     <div class="actions">
       <button class="btn primary big-btn pulse-hover" @click="$emit('start')">
-        Start jouw Wrapped ✨
+        Bereken Resultaat ✨
       </button>
     </div>
   </section>
