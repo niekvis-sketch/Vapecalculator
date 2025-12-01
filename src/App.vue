@@ -1,13 +1,89 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import InputPanel from './components/InputPanel.vue'
 import LoadingOverlay from './components/LoadingOverlay.vue'
 import WrappedShow from './components/WrappedShow.vue'
+import SettingsPanel from './components/SettingsPanel.vue'
 
 const weeklyVapes = ref(2)
 const costPerVape = ref(6.00)
 const age = ref('')
 const yearsVaping = ref('')
+
+const showSettings = ref(false)
+const defaultSettings = {
+  costs: true,
+  comparisons: true,
+  time: true,
+  health: true,
+  future: true,
+  stats: true,
+  savings: true,
+  positive: true,
+  action: true
+}
+
+const savedSettings = localStorage.getItem('vapecalc_settings')
+const slideSettings = ref(savedSettings ? JSON.parse(savedSettings) : defaultSettings)
+
+watch(slideSettings, (newVal) => {
+  localStorage.setItem('vapecalc_settings', JSON.stringify(newVal))
+}, { deep: true })
+
+// Theme Management
+const themes = ref({
+  default: {
+    name: 'Standaard (Dark)',
+    colors: {
+      '--bg': '#0f172a',
+      '--surface': 'rgba(30, 41, 59, 0.7)',
+      '--surface-highlight': 'rgba(51, 65, 85, 0.8)',
+      '--primary': '#818cf8',
+      '--primary-glow': 'rgba(129, 140, 248, 0.5)',
+      '--secondary': '#c084fc',
+      '--accent': '#2dd4bf',
+      '--text-main': '#f8fafc',
+      '--text-muted': '#94a3b8',
+      '--border': 'rgba(148, 163, 184, 0.1)'
+    }
+  },
+  pink: {
+    name: 'Pink Paradise 🌸',
+    colors: {
+      '--bg': '#380819',
+      '--surface': 'rgba(80, 10, 40, 0.7)',
+      '--surface-highlight': 'rgba(100, 20, 50, 0.8)',
+      '--primary': '#f472b6',
+      '--primary-glow': 'rgba(244, 114, 182, 0.5)',
+      '--secondary': '#fb7185',
+      '--accent': '#fbcfe8',
+      '--text-main': '#fff1f2',
+      '--text-muted': '#fda4af',
+      '--border': 'rgba(251, 207, 232, 0.1)'
+    }
+  }
+})
+
+const savedTheme = localStorage.getItem('vapecalc_theme')
+const currentTheme = ref(savedTheme && themes.value[savedTheme] ? savedTheme : 'default')
+
+function applyTheme(themeKey) {
+  const theme = themes.value[themeKey]
+  if (!theme) return
+  
+  const root = document.documentElement
+  Object.entries(theme.colors).forEach(([key, value]) => {
+    root.style.setProperty(key, value)
+  })
+}
+
+// Apply initial theme
+applyTheme(currentTheme.value)
+
+watch(currentTheme, (newVal) => {
+  localStorage.setItem('vapecalc_theme', newVal)
+  applyTheme(newVal)
+})
 
 const weeklyCost = computed(() => weeklyVapes.value * costPerVape.value)
 const yearlyCost = computed(() => weeklyCost.value * 52)
@@ -66,6 +142,14 @@ function handleYearsUpdate(val){ yearsVaping.value = val }
       </header>
     </transition>
 
+    <SettingsPanel 
+      v-if="showSettings" 
+      v-model="slideSettings" 
+      v-model:theme="currentTheme"
+      :themes="themes"
+      @close="showSettings = false" 
+    />
+
     <main class="app-grid" :class="{ 'full-width': view === 'wrapped' }">
       <transition name="zoom-fade" mode="out-in">
         <aside v-if="view === 'ask'" class="input-container glass" key="ask">
@@ -79,6 +163,7 @@ function handleYearsUpdate(val){ yearsVaping.value = val }
             @update:age="handleAgeUpdate"
             @update:yearsVaping="handleYearsUpdate"
             @start="startWrapped"
+            @open-settings="showSettings = true"
           />
         </aside>
 
@@ -92,6 +177,7 @@ function handleYearsUpdate(val){ yearsVaping.value = val }
             :comparisons="comparisons"
             :age="age"
             :yearsVaping="yearsVaping"
+            :slideSettings="slideSettings"
             @close="closeWrapped" 
           />
         </section>
@@ -113,7 +199,7 @@ function handleYearsUpdate(val){ yearsVaping.value = val }
 .wrapped-container { width: 100%; height: 100%; }
 .input-container { 
   width: 100%; 
-  max-width: 500px; 
+  max-width: 600px; 
   margin: 0 auto; 
   padding: 40px;
   border-radius: var(--radius);
@@ -141,6 +227,29 @@ function handleYearsUpdate(val){ yearsVaping.value = val }
 
 .header-animate {
   animation: slide-up 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.settings-trigger {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.settings-trigger:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(45deg);
 }
 
 /* Background Blobs */

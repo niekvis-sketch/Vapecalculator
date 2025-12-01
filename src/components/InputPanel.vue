@@ -6,7 +6,7 @@ const props = defineProps({
   age: { type: [Number, String], default: '' },
   yearsVaping: { type: [Number, String], default: '' }
 })
-const emit = defineEmits(['update:weeklyVapes', 'update:costPerVape', 'update:age', 'update:yearsVaping', 'start'])
+const emit = defineEmits(['update:weeklyVapes', 'update:costPerVape', 'update:age', 'update:yearsVaping', 'start', 'open-settings'])
 
 function preventInvalid(e) {
   if (['-', '+', 'e', 'E'].includes(e.key)) e.preventDefault()
@@ -86,6 +86,7 @@ function setYears(e) {
 
 <template>
   <section class="input-panel">
+    <button class="settings-btn" @click="$emit('open-settings')" title="Instellingen">⚙️</button>
     <div class="welcome-text">
       <h2>Ontdek jouw Vape-profiel</h2>
       <p>Vul je gegevens in en zie wat je écht uitgeeft (en wat je mist).</p>
@@ -185,6 +186,30 @@ function setYears(e) {
   flex-direction: column;
   gap: 32px;
   color: white;
+  position: relative;
+}
+
+.settings-btn {
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+}
+
+.settings-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(45deg);
 }
 
 .welcome-text h2 {

@@ -18,7 +18,7 @@
       <transition name="slide-fade" mode="out-in">
         
         <!-- Slide 1: Costs -->
-        <div v-if="currentSlide === 0" class="slide slide-costs" key="0">
+        <div v-if="activeSlideId === 'costs'" class="slide slide-costs" key="costs">
           <div class="content-wrapper">
             <h2 class="slide-title animate-in delay-1">Jouw Vape Jaar</h2>
             <div class="big-stat animate-in delay-2">
@@ -40,7 +40,7 @@
         </div>
 
         <!-- Slide 2: Comparisons -->
-        <div v-else-if="currentSlide === 1" class="slide slide-comparisons" key="1">
+        <div v-else-if="activeSlideId === 'comparisons'" class="slide slide-comparisons" key="comparisons">
           <div class="content-wrapper">
             <h2 class="slide-title animate-in delay-1">Wat had je kunnen kopen?</h2>
             <div class="comparison-grid">
@@ -61,7 +61,7 @@
         </div>
 
         <!-- Slide 3: Time -->
-        <div v-else-if="currentSlide === 2" class="slide slide-time" key="2">
+        <div v-else-if="activeSlideId === 'time'" class="slide slide-time" key="time">
           <div class="content-wrapper">
             <h2 class="slide-title animate-in delay-1">Tijd Verspild</h2>
             <div class="big-stat animate-in delay-2">
@@ -78,7 +78,7 @@
         </div>
 
         <!-- Slide 4: Health -->
-        <div v-else-if="currentSlide === 3" class="slide slide-health" key="3">
+        <div v-else-if="activeSlideId === 'health'" class="slide slide-health" key="health">
           <div class="content-wrapper">
             <h2 class="slide-title animate-in delay-1">De Gezondheidsrealiteit</h2>
             <div class="big-stat warning animate-in delay-2">
@@ -93,7 +93,7 @@
         </div>
 
         <!-- Slide 5: Future -->
-        <div v-else-if="currentSlide === 4" class="slide slide-future" key="4">
+        <div v-else-if="activeSlideId === 'future'" class="slide slide-future" key="future">
           <div class="content-wrapper">
             <h2 class="slide-title animate-in delay-1">Jouw 5-Jaar Voorspelling</h2>
             <p class="subtitle animate-in delay-2">Als je zo doorgaat...</p>
@@ -112,7 +112,7 @@
         </div>
 
         <!-- Slide 6: Stats -->
-        <div v-else-if="currentSlide === 5" class="slide slide-stats" key="5">
+        <div v-else-if="activeSlideId === 'stats'" class="slide slide-stats" key="stats">
           <div class="content-wrapper">
             <h2 class="slide-title animate-in delay-1">Je Bent Niet Alleen</h2>
             <div class="stat-card glass animate-in delay-2">
@@ -135,7 +135,7 @@
         </div>
 
         <!-- Slide 7: Savings (Interactive) -->
-        <div v-else-if="currentSlide === 6" class="slide slide-savings" key="6" @click.stop>
+        <div v-else-if="activeSlideId === 'savings'" class="slide slide-savings" key="savings" @click.stop>
           <div class="content-wrapper">
             <h2 class="slide-title animate-in delay-1">Wat Als?</h2>
             <p class="subtitle animate-in delay-2">Als je {{ reduction }}% minder zou vapen...</p>
@@ -158,7 +158,7 @@
         </div>
 
         <!-- Slide 8: Positive Spin -->
-        <div v-else-if="currentSlide === 7" class="slide slide-positive" key="7">
+        <div v-else-if="activeSlideId === 'positive'" class="slide slide-positive" key="positive">
           <div class="content-wrapper">
             <h2 class="slide-title animate-in delay-1">Het Goede Nieuws 🌟</h2>
             <p class="subtitle animate-in delay-2">Je lichaam herstelt razendsnel!</p>
@@ -186,7 +186,7 @@
         </div>
 
         <!-- Slide 9: Action -->
-        <div v-else-if="currentSlide === 8" class="slide slide-action" key="8">
+        <div v-else-if="activeSlideId === 'action'" class="slide slide-action" key="action">
           <div class="content-wrapper">
             <h2 class="slide-title animate-in delay-1">Jouw Actieplan</h2>
             <div class="action-buttons animate-in delay-2">
@@ -222,14 +222,38 @@ const props = defineProps({
   yearlyCost: Number,
   comparisons: Array,
   age: [Number, String],
-  yearsVaping: [Number, String]
+  yearsVaping: [Number, String],
+  slideSettings: {
+    type: Object,
+    default: () => ({
+      costs: true,
+      comparisons: true,
+      time: true,
+      health: true,
+      future: true,
+      stats: true,
+      savings: true,
+      positive: true,
+      action: true
+    })
+  }
 })
 
 const emit = defineEmits(['close'])
 
 const currentSlide = ref(0)
-const totalSlides = 9
 const reduction = ref(50)
+
+const allSlides = [
+  'costs', 'comparisons', 'time', 'health', 'future', 'stats', 'savings', 'positive', 'action'
+]
+
+const enabledSlides = computed(() => {
+  return allSlides.filter(id => props.slideSettings[id])
+})
+
+const totalSlides = computed(() => enabledSlides.value.length)
+const activeSlideId = computed(() => enabledSlides.value[currentSlide.value])
 
 // Calculations
 const minutesPerVape = 10 // Assumption: 10 mins of active puffing per vape device? Or per session? 
@@ -249,7 +273,7 @@ const hoursWasted = computed(() => Math.round(props.weeklyVapes * 1 * 52))
 const totalPuffs = computed(() => Math.round(props.weeklyVapes * 600 * 52)) // 600 puffs per vape
 
 function nextSlide() {
-  if (currentSlide.value < totalSlides - 1) currentSlide.value++
+  if (currentSlide.value < totalSlides.value - 1) currentSlide.value++
 }
 
 function prevSlide() {
