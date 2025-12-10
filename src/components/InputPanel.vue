@@ -6,7 +6,7 @@ const props = defineProps({
   age: { type: [Number, String], default: '' },
   yearsVaping: { type: [Number, String], default: '' }
 })
-const emit = defineEmits(['update:weeklyVapes', 'update:costPerVape', 'update:age', 'update:yearsVaping', 'start', 'open-settings'])
+const emit = defineEmits(['update:weeklyVapes', 'update:costPerVape', 'update:age', 'update:yearsVaping', 'start'])
 
 function preventInvalid(e) {
   if (['-', '+', 'e', 'E'].includes(e.key)) e.preventDefault()
@@ -86,7 +86,6 @@ function setYears(e) {
 
 <template>
   <section class="input-panel">
-    <button class="settings-btn" @click="$emit('open-settings')" title="Instellingen">⚙️</button>
     <div class="welcome-text">
       <h2>Wat kost jouw vape?</h2>
       <p>Vul je gegevens in om de berekening te maken.</p>

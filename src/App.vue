@@ -202,6 +202,8 @@ function handleYearsUpdate(val){ yearsVaping.value = val }
       </div>
     </div>
 
+    <button class="global-settings-btn" @click="showSettings = true" title="Instellingen">⚙️</button>
+
     <transition name="fade-slide" mode="out-in">
       <header v-if="wizardStep === 4" class="header-animate">
         <h1>Vape Calculator</h1>
@@ -249,7 +251,6 @@ function handleYearsUpdate(val){ yearsVaping.value = val }
             @update:age="handleAgeUpdate"
             @update:yearsVaping="handleYearsUpdate"
             @start="startWrapped"
-            @open-settings="showSettings = true"
           />
         </aside>
 
@@ -419,6 +420,45 @@ function handleYearsUpdate(val){ yearsVaping.value = val }
 .zoom-fade-leave-to {
   opacity: 0;
   transform: scale(0.95) translateY(20px);
+}
+
+.global-settings-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-main);
+  backdrop-filter: blur(5px);
+}
+
+.global-settings-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(45deg);
+}
+
+/* Editorial Theme Override for Settings Button */
+[data-theme="editorial"] .global-settings-btn {
+  border-radius: 0;
+  border: 2px solid var(--border);
+  background: var(--surface);
+  box-shadow: 4px 4px 0px var(--border);
+  color: var(--text-main);
+}
+
+[data-theme="editorial"] .global-settings-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px var(--border);
 }
 </style>
         
