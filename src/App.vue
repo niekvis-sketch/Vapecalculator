@@ -426,7 +426,7 @@ function handleYearsUpdate(val){ yearsVaping.value = val }
   position: fixed;
   top: 20px;
   right: 20px;
-  z-index: 100;
+  z-index: 200;
   background: rgba(255, 255, 255, 0.1);
   border: none;
   border-radius: 50%;
