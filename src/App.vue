@@ -46,7 +46,8 @@ const themes = ref({
       '--accent': '#2dd4bf',
       '--text-main': '#f8fafc',
       '--text-muted': '#94a3b8',
-      '--border': 'rgba(148, 163, 184, 0.1)'
+      '--border': 'rgba(148, 163, 184, 0.1)',
+      '--bg-pattern': 'radial-gradient(circle at 15% 50%, rgba(79, 70, 229, 0.15) 0%, transparent 25%), radial-gradient(circle at 85% 30%, rgba(192, 132, 252, 0.15) 0%, transparent 25%)'
     }
   },
   pink: {
@@ -61,7 +62,24 @@ const themes = ref({
       '--accent': '#fbcfe8',
       '--text-main': '#fff1f2',
       '--text-muted': '#fda4af',
-      '--border': 'rgba(251, 207, 232, 0.1)'
+      '--border': 'rgba(251, 207, 232, 0.1)',
+      '--bg-pattern': 'radial-gradient(circle at 15% 50%, rgba(244, 114, 182, 0.15) 0%, transparent 25%), radial-gradient(circle at 85% 30%, rgba(251, 113, 133, 0.15) 0%, transparent 25%)'
+    }
+  },
+  neon: {
+    name: 'Neon Fintech ⚡',
+    colors: {
+      '--bg': '#050A14',
+      '--surface': 'rgba(15, 23, 42, 0.8)',
+      '--surface-highlight': 'rgba(30, 41, 59, 0.8)',
+      '--primary': '#D4FF00',
+      '--primary-glow': 'rgba(212, 255, 0, 0.4)',
+      '--secondary': '#0ea5e9',
+      '--accent': '#D4FF00',
+      '--text-main': '#ffffff',
+      '--text-muted': '#94a3b8',
+      '--border': 'rgba(212, 255, 0, 0.2)',
+      '--bg-pattern': 'linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px), radial-gradient(circle at 50% 50%, rgba(21, 94, 89, 0.15) 0%, transparent 50%)'
     }
   }
 })
