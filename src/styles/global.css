@@ -151,6 +151,56 @@ h1 {
 .animate-float { animation: float 6s ease-in-out infinite; }
 .animate-slide-up { animation: slide-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
+/* Editorial Theme Overrides */
+[data-theme="editorial"] .glass,
+[data-theme="editorial"] .option-card,
+[data-theme="editorial"] .settings-card,
+[data-theme="editorial"] .input-container {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  backdrop-filter: none;
+  box-shadow: 8px 8px 0px var(--border);
+  border-radius: 0;
+}
+
+[data-theme="editorial"] .btn.primary {
+  background: var(--primary);
+  color: black;
+  border: 2px solid var(--border);
+  box-shadow: 4px 4px 0px var(--border);
+  border-radius: 0;
+  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+[data-theme="editorial"] .btn.primary:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px var(--border);
+}
+
+[data-theme="editorial"] .btn.primary:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px var(--border);
+}
+
+[data-theme="editorial"] h1, 
+[data-theme="editorial"] h2, 
+[data-theme="editorial"] .big-stat .amount {
+  font-family: 'Impact', 'Arial Black', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+[data-theme="editorial"] .blob,
+[data-theme="editorial"] .floating-euro {
+  display: none;
+}
+
+[data-theme="editorial"] body {
+  background-size: 20px 20px;
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }

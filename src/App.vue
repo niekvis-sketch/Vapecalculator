@@ -81,6 +81,23 @@ const themes = ref({
       '--border': 'rgba(212, 255, 0, 0.2)',
       '--bg-pattern': 'linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px), radial-gradient(circle at 50% 50%, rgba(21, 94, 89, 0.15) 0%, transparent 50%)'
     }
+  },
+  editorial: {
+    name: 'Editorial Retro 🗞️',
+    colors: {
+      '--bg': '#121212',
+      '--surface': '#1E1E1E',
+      '--surface-highlight': '#2A2A2A',
+      '--primary': '#BEF264',
+      '--primary-glow': 'transparent',
+      '--secondary': '#C4B5FD',
+      '--accent': '#F87171',
+      '--text-main': '#F5F5F0',
+      '--text-muted': '#A3A3A3',
+      '--border': '#F5F5F0',
+      '--radius': '0px',
+      '--bg-pattern': 'radial-gradient(#333 1px, transparent 1px)'
+    }
   }
 })
 
@@ -92,6 +109,8 @@ function applyTheme(themeKey) {
   if (!theme) return
   
   const root = document.documentElement
+  root.setAttribute('data-theme', themeKey)
+  
   Object.entries(theme.colors).forEach(([key, value]) => {
     root.style.setProperty(key, value)
   })
