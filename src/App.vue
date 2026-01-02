@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import WelcomeScreen from './components/WelcomeScreen.vue'
 import PreferenceScreen from './components/PreferenceScreen.vue'
 import CalculationScreen from './components/CalculationScreen.vue'
+import ResultsWrapped from './components/ResultsWrapped.vue'
 
 const currentScreen = ref('welcome')
 const currentStep = ref(0)
@@ -29,12 +30,17 @@ const handleChoice = (choice) => {
 const handleCalculate = (data) => {
   console.log('Calculation data:', data)
   calculationData.value = data
-  // Future: Show results
+  currentScreen.value = 'results'
 }
 
 const handleNoVape = () => {
   console.log('User does not vape')
   // Future: Show specific message or result
+}
+
+const handleFinish = () => {
+  // Reset or show final CTA
+  location.reload() // Simple reset for now
 }
 </script>
 
@@ -50,6 +56,12 @@ const handleNoVape = () => {
       v-else-if="currentScreen === 'calculation'"
       @calculate="handleCalculate"
       @no-vape="handleNoVape"
+    />
+    <ResultsWrapped
+      v-else-if="currentScreen === 'results'"
+      :calculation-data="calculationData"
+      :user-choices="userChoices"
+      @finish="handleFinish"
     />
   </main>
 </template>
