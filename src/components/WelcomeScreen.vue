@@ -43,7 +43,7 @@ const emit = defineEmits(['start'])
   position: relative;
   width: 100%;
   height: 100vh;
-  background-color: #2563EB; /* Bright Blue */
+  background-color: #0270E3; /* Bright Blue */
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -115,13 +115,13 @@ const emit = defineEmits(['start'])
 }
 
 .start-btn {
-  background-color: #D9F904; /* Neon Yellow */
-  color: black;
+  background-color: #DFF002; /* Neon Yellow */
+  color: #000D1B;
   font-family: 'Inter', sans-serif;
   font-weight: 900;
   font-size: 1.5rem;
-  padding: 16px 64px;
-  border: none;
+  padding: 25px 100px;
+  border: #000D1B 2px solid;
   cursor: pointer;
   text-transform: uppercase;
   box-shadow: 8px 8px 0px white; /* Hard shadow offset */
@@ -136,17 +136,17 @@ const emit = defineEmits(['start'])
 /* Floating Euros */
 .euro {
   position: absolute;
-  color: #D9F904;
+  color: #DFF002;
   font-weight: 900;
   font-style: italic;
   z-index: 5;
-  animation: float 4s ease-in-out infinite;
+  animation: float 5s ease-in-out infinite;
 }
 
 .euro-1 {
-  font-size: 6rem;
+  font-size: 8rem;
   top: 10%;
-  left: 10%;
+  left: 30%;
   transform: rotate(-15deg);
   animation-delay: 0s;
 }
@@ -154,7 +154,7 @@ const emit = defineEmits(['start'])
 .euro-2 {
   font-size: 5rem;
   top: 25%;
-  right: 10%;
+  right: 30%;
   transform: rotate(15deg);
   animation-delay: 1s;
 }
@@ -162,14 +162,14 @@ const emit = defineEmits(['start'])
 .euro-3 {
   font-size: 4rem;
   bottom: 35%;
-  right: 20%;
+  right: 35%;
   transform: rotate(-10deg);
   animation-delay: 2s;
 }
 
 @keyframes float {
   0%, 100% { transform: translateY(0) rotate(var(--r, 0deg)); }
-  50% { transform: translateY(-20px) rotate(var(--r, 0deg)); }
+  50% { transform: translateY(-15px) rotate(var(--r, 0deg)); }
 }
 
 /* Mobile Responsiveness */

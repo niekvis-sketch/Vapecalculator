@@ -17,5 +17,5 @@ html, body, #app {
 body {
   font-family: var(--font-main);
   -webkit-font-smoothing: antialiased;
-  background-color: #2563EB; /* Fallback */
+  background-color: #0270E3; /* Fallback */
 }
