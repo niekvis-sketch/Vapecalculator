@@ -4,6 +4,8 @@ import InputPanel from './components/InputPanel.vue'
 import LoadingOverlay from './components/LoadingOverlay.vue'
 import WrappedShow from './components/WrappedShow.vue'
 import SettingsPanel from './components/SettingsPanel.vue'
+import WelcomeScreen from './components/WelcomeScreen.vue'
+import PreferenceScreen from './components/PreferenceScreen.vue'
 
 const weeklyVapes = ref(2)
 const costPerVape = ref(6.00)
@@ -44,7 +46,8 @@ const themes = ref({
       '--accent': '#2dd4bf',
       '--text-main': '#f8fafc',
       '--text-muted': '#94a3b8',
-      '--border': 'rgba(148, 163, 184, 0.1)'
+      '--border': 'rgba(148, 163, 184, 0.1)',
+      '--bg-pattern': 'radial-gradient(circle at 15% 50%, rgba(79, 70, 229, 0.15) 0%, transparent 25%), radial-gradient(circle at 85% 30%, rgba(192, 132, 252, 0.15) 0%, transparent 25%)'
     }
   },
   pink: {
@@ -59,7 +62,41 @@ const themes = ref({
       '--accent': '#fbcfe8',
       '--text-main': '#fff1f2',
       '--text-muted': '#fda4af',
-      '--border': 'rgba(251, 207, 232, 0.1)'
+      '--border': 'rgba(251, 207, 232, 0.1)',
+      '--bg-pattern': 'radial-gradient(circle at 15% 50%, rgba(244, 114, 182, 0.15) 0%, transparent 25%), radial-gradient(circle at 85% 30%, rgba(251, 113, 133, 0.15) 0%, transparent 25%)'
+    }
+  },
+  neon: {
+    name: 'Neon Fintech ⚡',
+    colors: {
+      '--bg': '#050A14',
+      '--surface': 'rgba(15, 23, 42, 0.8)',
+      '--surface-highlight': 'rgba(30, 41, 59, 0.8)',
+      '--primary': '#D4FF00',
+      '--primary-glow': 'rgba(212, 255, 0, 0.4)',
+      '--secondary': '#0ea5e9',
+      '--accent': '#D4FF00',
+      '--text-main': '#ffffff',
+      '--text-muted': '#94a3b8',
+      '--border': 'rgba(212, 255, 0, 0.2)',
+      '--bg-pattern': 'linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px), radial-gradient(circle at 50% 50%, rgba(21, 94, 89, 0.15) 0%, transparent 50%)'
+    }
+  },
+  editorial: {
+    name: 'Editorial Retro 🗞️',
+    colors: {
+      '--bg': '#121212',
+      '--surface': '#1E1E1E',
+      '--surface-highlight': '#2A2A2A',
+      '--primary': '#BEF264',
+      '--primary-glow': 'transparent',
+      '--secondary': '#C4B5FD',
+      '--accent': '#F87171',
+      '--text-main': '#F5F5F0',
+      '--text-muted': '#A3A3A3',
+      '--border': '#F5F5F0',
+      '--radius': '0px',
+      '--bg-pattern': 'radial-gradient(#333 1px, transparent 1px)'
     }
   }
 })
@@ -72,6 +109,8 @@ function applyTheme(themeKey) {
   if (!theme) return
   
   const root = document.documentElement
+  root.setAttribute('data-theme', themeKey)
+  
   Object.entries(theme.colors).forEach(([key, value]) => {
     root.style.setProperty(key, value)
   })
@@ -89,32 +128,60 @@ const weeklyCost = computed(() => weeklyVapes.value * costPerVape.value)
 const yearlyCost = computed(() => weeklyCost.value * 52)
 const monthlyCost = computed(() => yearlyCost.value / 12)
 
-const comparisons = [
-  { id: 'bioscoop', name: 'Bioscoopkaartjes', cost: 12, icon: '🎬' },
-  { id: 'mcd', name: "McDonald's menu's", cost: 9, icon: '🍔' },
-  { id: 'spotify', name: 'Maanden Spotify Premium', cost: 11, icon: '🎵' },
-  { id: 'netflix', name: 'Maanden Netflix', cost: 11, icon: '📺' },
-  { id: 'sneakers', name: 'Paar Sneakers', cost: 100, icon: '👟' },
-  { id: 'game', name: 'Nieuwe Games', cost: 60, icon: '🎮' }
+// Wizard State
+const wizardStep = ref(0) // 0=Welcome, 1-3=Prefs, 4=Input, 5=Loading, 6=Wrapped
+const userPreferences = ref([])
+
+const preferenceQuestions = [
+  {
+    title: "Wat doe je liever?",
+    options: [
+      { id: 'cinema', name: 'Bioscoop', cost: 12, icon: '🎬' },
+      { id: 'concert', name: 'Concert/Festival', cost: 60, icon: '🎵' }
+    ]
+  },
+  {
+    title: "Waar word je blijer van?",
+    options: [
+      { id: 'sneakers', name: 'Nieuwe Sneakers', cost: 120, icon: '👟' },
+      { id: 'gaming', name: 'Gaming Gear', cost: 80, icon: '🎮' }
+    ]
+  },
+  {
+    title: "Ideaal weekend?",
+    options: [
+      { id: 'weekend', name: 'Weekendje Weg', cost: 200, icon: '✈️' },
+      { id: 'dinner', name: 'Uit Eten', cost: 25, icon: '🍕' }
+    ]
+  }
 ]
 
-const view = ref('ask') // 'ask' | 'loading' | 'wrapped' | 'bart'
+function startWizard() {
+  wizardStep.value = 1
+}
+
+function handlePreferenceSelect(option) {
+  userPreferences.value.push(option)
+  if (wizardStep.value < 3) {
+    wizardStep.value++
+  } else {
+    wizardStep.value = 4 // Go to Input
+  }
+}
 
 function startWrapped(){
   if (costPerVape.value === 0) {
-    view.value = 'bart'
+    // view.value = 'bart' // Removed Bart for now or handle differently
     return
   }
-  view.value = 'loading'
+  wizardStep.value = 5 // Loading
   // simulate computation/loading then show wrapped test voor mac 
-  setTimeout(()=>{ view.value = 'wrapped' }, 1500)
+  setTimeout(()=>{ wizardStep.value = 6 }, 1500)
 }
 
-function closeWrapped(){ view.value = 'ask' }
-function resetBart(){ 
-  weeklyVapes.value = 2
-  costPerVape.value = 6
-  view.value = 'ask' 
+function closeWrapped(){ 
+  wizardStep.value = 0 
+  userPreferences.value = []
 }
 
 function handleWeeklyUpdate(val){ weeklyVapes.value = Number(val) }
@@ -135,8 +202,10 @@ function handleYearsUpdate(val){ yearsVaping.value = val }
       </div>
     </div>
 
+    <button class="global-settings-btn" @click="showSettings = true" title="Instellingen">⚙️</button>
+
     <transition name="fade-slide" mode="out-in">
-      <header v-if="view === 'ask'" class="header-animate">
+      <header v-if="wizardStep === 4" class="header-animate">
         <h1>Vape Calculator</h1>
         <p>Ontdek wat jouw vape-gewoonte écht kost in geld, tijd en gezondheid.</p>
       </header>
@@ -150,9 +219,28 @@ function handleYearsUpdate(val){ yearsVaping.value = val }
       @close="showSettings = false" 
     />
 
-    <main class="app-grid" :class="{ 'full-width': view === 'wrapped' }">
+    <main class="app-grid" :class="{ 'full-width': wizardStep === 6 }">
       <transition name="zoom-fade" mode="out-in">
-        <aside v-if="view === 'ask'" class="input-container glass" key="ask">
+        
+        <!-- Step 0: Welcome -->
+        <WelcomeScreen 
+          v-if="wizardStep === 0" 
+          key="welcome"
+          @start="startWizard"
+        />
+
+        <!-- Step 1-3: Preferences -->
+        <PreferenceScreen
+          v-else-if="wizardStep >= 1 && wizardStep <= 3"
+          :key="`pref-${wizardStep}`"
+          :question="preferenceQuestions[wizardStep - 1]"
+          :step="wizardStep"
+          :totalSteps="3"
+          @select="handlePreferenceSelect"
+        />
+
+        <!-- Step 4: Input -->
+        <aside v-else-if="wizardStep === 4" class="input-container glass" key="input">
           <InputPanel
             :weeklyVapes="weeklyVapes"
             :costPerVape="costPerVape"
@@ -163,18 +251,18 @@ function handleYearsUpdate(val){ yearsVaping.value = val }
             @update:age="handleAgeUpdate"
             @update:yearsVaping="handleYearsUpdate"
             @start="startWrapped"
-            @open-settings="showSettings = true"
           />
         </aside>
 
-        <section v-else-if="view === 'wrapped'" class="wrapped-container" key="wrapped">
+        <!-- Step 6: Wrapped -->
+        <section v-else-if="wizardStep === 6" class="wrapped-container" key="wrapped">
           <WrappedShow 
             :weeklyVapes="weeklyVapes"
             :costPerVape="costPerVape"
             :weeklyCost="weeklyCost" 
             :monthlyCost="monthlyCost" 
             :yearlyCost="yearlyCost" 
-            :comparisons="comparisons"
+            :comparisons="userPreferences"
             :age="age"
             :yearsVaping="yearsVaping"
             :slideSettings="slideSettings"
@@ -182,13 +270,8 @@ function handleYearsUpdate(val){ yearsVaping.value = val }
           />
         </section>
 
-        <LoadingOverlay v-else-if="view === 'loading'" key="loading" />
+        <LoadingOverlay v-else-if="wizardStep === 5" key="loading" />
 
-        <div v-else-if="view === 'bart'" class="bart-message glass" key="bart">
-          <h2>Nathan, doe even normaal man! 🤨</h2>
-          <p>Je kunt niet alles gratis krijgen in het leven.</p>
-          <button class="btn primary" @click="resetBart">Opnieuw proberen</button>
-        </div>
       </transition>
     </main>
   </div>
@@ -337,6 +420,45 @@ function handleYearsUpdate(val){ yearsVaping.value = val }
 .zoom-fade-leave-to {
   opacity: 0;
   transform: scale(0.95) translateY(20px);
+}
+
+.global-settings-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 200;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-main);
+  backdrop-filter: blur(5px);
+}
+
+.global-settings-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(45deg);
+}
+
+/* Editorial Theme Override for Settings Button */
+[data-theme="editorial"] .global-settings-btn {
+  border-radius: 0;
+  border: 2px solid var(--border);
+  background: var(--surface);
+  box-shadow: 4px 4px 0px var(--border);
+  color: var(--text-main);
+}
+
+[data-theme="editorial"] .global-settings-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px var(--border);
 }
 </style>
         

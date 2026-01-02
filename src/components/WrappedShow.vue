@@ -273,7 +273,11 @@ const hoursWasted = computed(() => Math.round(props.weeklyVapes * 1 * 52))
 const totalPuffs = computed(() => Math.round(props.weeklyVapes * 600 * 52)) // 600 puffs per vape
 
 function nextSlide() {
-  if (currentSlide.value < totalSlides.value - 1) currentSlide.value++
+  if (currentSlide.value < totalSlides.value - 1) {
+    currentSlide.value++
+  } else {
+    emit('close')
+  }
 }
 
 function prevSlide() {
@@ -654,5 +658,185 @@ function share() {
   .comp-item {
     padding: 12px;
   }
+}
+
+/* --- THEME OVERRIDES --- */
+
+/* Editorial (Brutalist/Retro) */
+:global([data-theme="editorial"]) .wrapped-overlay {
+  background: var(--bg);
+  backdrop-filter: none;
+}
+
+:global([data-theme="editorial"]) .stat-item,
+:global([data-theme="editorial"]) .comp-item,
+:global([data-theme="editorial"]) .context-box,
+:global([data-theme="editorial"]) .stat-card,
+:global([data-theme="editorial"]) .savings-result,
+:global([data-theme="editorial"]) .tips,
+:global([data-theme="editorial"]) .recovery-item,
+:global([data-theme="editorial"]) .progress-segment,
+:global([data-theme="editorial"]) .bar-fill,
+:global([data-theme="editorial"]) .comparison-bar,
+:global([data-theme="editorial"]) .slider,
+:global([data-theme="editorial"]) .slider::-webkit-slider-thumb,
+:global([data-theme="editorial"]) .btn {
+  border-radius: 0 !important;
+}
+
+:global([data-theme="editorial"]) .stat-item,
+:global([data-theme="editorial"]) .comp-item,
+:global([data-theme="editorial"]) .context-box,
+:global([data-theme="editorial"]) .stat-card,
+:global([data-theme="editorial"]) .savings-result,
+:global([data-theme="editorial"]) .tips,
+:global([data-theme="editorial"]) .recovery-item {
+  border: 1px solid var(--text);
+  background: var(--bg);
+  box-shadow: 4px 4px 0 var(--text);
+}
+
+:global([data-theme="editorial"]) .comp-item:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--text);
+  background: var(--bg);
+}
+
+:global([data-theme="editorial"]) .progress-segment {
+  background: rgba(0,0,0,0.2);
+  border: 1px solid var(--text);
+}
+
+:global([data-theme="editorial"]) .progress-fill {
+  background: var(--accent);
+}
+
+:global([data-theme="editorial"]) .big-stat {
+  font-family: "Times New Roman", serif;
+  font-weight: 400;
+  letter-spacing: -2px;
+}
+
+:global([data-theme="editorial"]) .slide-title {
+  font-family: "Times New Roman", serif;
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 10px;
+  margin-bottom: 30px;
+  display: inline-block;
+}
+
+:global([data-theme="editorial"]) .btn {
+  border: 2px solid var(--text);
+  background: var(--accent);
+  color: var(--bg);
+  box-shadow: 4px 4px 0 var(--text);
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+:global([data-theme="editorial"]) .btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--text);
+}
+
+/* Neon (Cyberpunk/Fintech) */
+:global([data-theme="neon"]) .wrapped-overlay {
+  background: rgba(5, 5, 5, 0.95);
+}
+
+:global([data-theme="neon"]) .big-stat {
+  text-shadow: 0 0 10px var(--accent), 0 0 20px var(--accent);
+  font-family: 'Courier New', monospace;
+  letter-spacing: -1px;
+}
+
+:global([data-theme="neon"]) .slide-title {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px var(--primary);
+}
+
+:global([data-theme="neon"]) .stat-item,
+:global([data-theme="neon"]) .comp-item,
+:global([data-theme="neon"]) .stat-card,
+:global([data-theme="neon"]) .savings-result {
+  border: 1px solid var(--accent);
+  background: rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 15px rgba(0, 255, 0, 0.1);
+  border-radius: 4px;
+}
+
+:global([data-theme="neon"]) .progress-segment {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 0;
+}
+
+:global([data-theme="neon"]) .progress-fill {
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent);
+}
+
+:global([data-theme="neon"]) .btn {
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  text-shadow: 0 0 5px var(--accent);
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+  border-radius: 4px;
+}
+
+:global([data-theme="neon"]) .btn:hover {
+  background: var(--accent);
+  color: black;
+  box-shadow: 0 0 20px var(--accent);
+}
+
+/* Pink (Soft/Playful) */
+:global([data-theme="pink"]) .wrapped-overlay {
+  background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);
+  color: #831843;
+}
+
+:global([data-theme="pink"]) .stat-item,
+:global([data-theme="pink"]) .comp-item,
+:global([data-theme="pink"]) .stat-card {
+  background: rgba(255, 255, 255, 0.6);
+  border: 2px solid white;
+  box-shadow: 0 10px 25px -5px rgba(236, 72, 153, 0.2);
+}
+
+:global([data-theme="pink"]) .big-stat {
+  color: #db2777;
+  text-shadow: 2px 2px 0px white;
+}
+
+:global([data-theme="pink"]) .progress-segment {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+:global([data-theme="pink"]) .progress-fill {
+  background: #db2777;
+}
+
+:global([data-theme="pink"]) .stat-item strong,
+:global([data-theme="pink"]) .comp-count,
+:global([data-theme="pink"]) .slider-value,
+:global([data-theme="pink"]) .big-stat,
+:global([data-theme="pink"]) .slide-title,
+:global([data-theme="pink"]) .subtitle {
+  color: #831843;
+  text-shadow: none;
+}
+
+:global([data-theme="pink"]) .stat-item span,
+:global([data-theme="pink"]) .comp-name,
+:global([data-theme="pink"]) .bar-labels,
+:global([data-theme="pink"]) .tips ul {
+  color: #9d174d;
+}
+
+:global([data-theme="pink"]) .tips h3 {
+  color: #be185d;
 }
 </style>
