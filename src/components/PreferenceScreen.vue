@@ -62,9 +62,8 @@ const selectChoice = (choiceId) => {
 
 <template>
   <div class="choice-container">
-    <!-- Top Pattern Bar -->
-    <div class="pattern-bar top">
-    </div>
+    <!-- Gradient Background -->
+    <div class="bg-gradient"></div>
 
     <div class="content">
       <h2 class="title" style="white-space: pre-line">{{ currentQuestion.title }}</h2>
@@ -86,10 +85,6 @@ const selectChoice = (choiceId) => {
         </button>
       </div>
     </div>
-
-    <!-- Bottom Pattern Bar -->
-    <div class="pattern-bar bottom">
-    </div>
   </div>
 </template>
 
@@ -97,6 +92,7 @@ const selectChoice = (choiceId) => {
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@1,900&family=Pacifico&display=swap');
 
 .choice-container {
+  position: relative;
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -106,17 +102,12 @@ const selectChoice = (choiceId) => {
   overflow: hidden;
 }
 
-.pattern-bar {
-  height: 15vh;
-  width: 100%;
-  background: linear-gradient(180deg, #D9F904 0%, #E5E7EB 100%);
-  position: relative;
-  overflow: hidden;
-}
-
-.pattern-bar.bottom {
-  background: linear-gradient(0deg, #D9F904 0%, #E5E7EB 100%);
-  margin-top: auto;
+.bg-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(217, 249, 4, 0.1) 0%, transparent 30%, transparent 70%, rgba(217, 249, 4, 0.2) 100%);
+  pointer-events: none;
+  z-index: 0;
 }
 
 .content {

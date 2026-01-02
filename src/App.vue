@@ -2,10 +2,12 @@
 import { ref } from 'vue'
 import WelcomeScreen from './components/WelcomeScreen.vue'
 import PreferenceScreen from './components/PreferenceScreen.vue'
+import CalculationScreen from './components/CalculationScreen.vue'
 
 const currentScreen = ref('welcome')
 const currentStep = ref(0)
 const userChoices = ref({})
+const calculationData = ref(null)
 
 const handleStart = () => {
   currentScreen.value = 'preference'
@@ -20,8 +22,19 @@ const handleChoice = (choice) => {
     currentStep.value++
   } else {
     console.log('All choices made:', userChoices.value)
-    // Hier komt de logica voor het volgende scherm (bijv. resultaten)
+    currentScreen.value = 'calculation'
   }
+}
+
+const handleCalculate = (data) => {
+  console.log('Calculation data:', data)
+  calculationData.value = data
+  // Future: Show results
+}
+
+const handleNoVape = () => {
+  console.log('User does not vape')
+  // Future: Show specific message or result
 }
 </script>
 
@@ -32,6 +45,11 @@ const handleChoice = (choice) => {
       v-else-if="currentScreen === 'preference'" 
       :step="currentStep"
       @choice="handleChoice" 
+    />
+    <CalculationScreen 
+      v-else-if="currentScreen === 'calculation'"
+      @calculate="handleCalculate"
+      @no-vape="handleNoVape"
     />
   </main>
 </template>
