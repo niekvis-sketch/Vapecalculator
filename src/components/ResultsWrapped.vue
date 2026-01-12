@@ -2,6 +2,12 @@
 import { ref, computed } from 'vue'
 import muzieknootIcon from '../assets/muzieknoot.svg'
 import filmIcon from '../assets/film.svg'
+import sneakerIcon from '../assets/sneaker.svg'
+import cameraIcon from '../assets/camera.svg'
+import themeparkIcon from '../assets/themepark.svg'
+import zooIcon from '../assets/zoo.svg'
+import gameIcon from '../assets/game.svg'
+import bluetoothIcon from '../assets/bluetooth.svg'
 
 const props = defineProps({
   calculationData: {
