@@ -2,9 +2,13 @@
 import { ref, computed } from 'vue'
 import muzieknootIcon from '../assets/muzieknoot.svg'
 import filmIcon from '../assets/film.svg'
-// Placeholder icons for new options - using existing ones for now or generic
-// In a real scenario, we'd import specific SVGs for sneakers, camera, etc.
-// For now, I'll reuse the existing ones to prevent errors, but the logic is ready for new assets.
+// Import specific SVGs used by the options
+import sneakerIcon from '../assets/sneaker.svg'
+import cameraIcon from '../assets/camera.svg'
+import themeparkIcon from '../assets/themepark.svg'
+import zooIcon from '../assets/zoo.svg'
+import gameIcon from '../assets/game.svg'
+import bluetoothIcon from '../assets/bluetooth.svg'
 
 const props = defineProps({
   step: {
@@ -28,24 +32,24 @@ const questions = [
     id: 'gadget',
     title: 'WAT HEB JIJ\nLIEVER?',
     options: [
-      { id: 'sneakers', label: 'Nieuwe sneakers', icon: filmIcon, font: 'bold-font' }, // Placeholder icon
-      { id: 'camera', label: 'Digitale camera', icon: muzieknootIcon, font: 'bold-font' } // Placeholder icon
+      { id: 'sneakers', label: 'Nieuwe sneakers', icon: sneakerIcon, font: 'bold-font' }, // Placeholder icon
+      { id: 'camera', label: 'Digitale camera', icon: cameraIcon, font: 'bold-font' } // Placeholder icon
     ]
   },
   {
     id: 'outing',
     title: 'WAAR GA JIJ\nHEEN?',
     options: [
-      { id: 'pretpark', label: 'Pretpark', icon: muzieknootIcon, font: 'script-font' }, // Placeholder icon
-      { id: 'dierentuin', label: 'Dierentuin', icon: filmIcon, font: 'bold-font' } // Placeholder icon
+      { id: 'pretpark', label: 'Pretpark', icon: themeparkIcon, font: 'script-font' }, // Placeholder icon
+      { id: 'dierentuin', label: 'Dierentuin', icon: zooIcon, font: 'bold-font' } // Placeholder icon
     ]
   },
   {
     id: 'entertainment',
     title: 'WAT WIL JIJ\nHEBBEN?',
     options: [
-      { id: 'game', label: 'Nieuwe game', icon: filmIcon, font: 'bold-font' }, // Placeholder icon
-      { id: 'jbl', label: 'Nieuwe JBL box', icon: muzieknootIcon, font: 'bold-font' } // Placeholder icon
+      { id: 'game', label: 'Nieuwe game', icon: gameIcon, font: 'bold-font' }, // Placeholder icon
+      { id: 'jbl', label: 'Nieuwe JBL box', icon: bluetoothIcon, font: 'bold-font' } // Placeholder icon
     ]
   }
 ]
