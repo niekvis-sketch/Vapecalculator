@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import WelcomeScreen from './components/WelcomeScreen.vue'
 import PreferenceScreen from './components/PreferenceScreen.vue'
 import CalculationScreen from './components/CalculationScreen.vue'
+import NoVapeScreen from './components/NoVapeScreen.vue'
 import ResultsWrapped from './components/ResultsWrapped.vue'
 
 const currentScreen = ref('welcome')
@@ -35,7 +36,7 @@ const handleCalculate = (data) => {
 
 const handleNoVape = () => {
   console.log('User does not vape')
-  // Future: Show specific message or result
+  currentScreen.value = 'no-vape'
 }
 
 const handleFinish = () => {
@@ -56,6 +57,10 @@ const handleFinish = () => {
       v-else-if="currentScreen === 'calculation'"
       @calculate="handleCalculate"
       @no-vape="handleNoVape"
+    />
+    <NoVapeScreen
+      v-else-if="currentScreen === 'no-vape'"
+      @calculate="handleCalculate"
     />
     <ResultsWrapped
       v-else-if="currentScreen === 'results'"
